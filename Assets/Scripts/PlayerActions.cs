@@ -13,7 +13,7 @@ public class PlayerActions : MonoBehaviour
     public float ballForceMin = 150f;
     public float ballForceMax = 800f;
     public float ballForce;
-    public float totalTime = 3f;
+    public float totalTime = 2f;
     float currentTime = 0.0f;
 
     public bool holdingBall = true;
@@ -21,8 +21,10 @@ public class PlayerActions : MonoBehaviour
     //
 
     bool isPickableBall = false;
+    bool pickableBtn = false;
     public CanvasController canvasScript;
     public LayerMask pickableLayer;
+    public LayerMask pickbtn;
     RaycastHit hit;
 
     // Start is called before the first frame update
@@ -69,7 +71,26 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            if(Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, pickableLayer))
+            // if(Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, pickableLayer))
+            if(Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, 2, pickbtn))
+            {   
+                if(pickableBtn == false)
+                {
+                    pickableBtn = true;
+                    canvasScript.changePickableBallColor(true);
+                }
+                if(pickableBtn && Input.GetKeyDown(KeyCode.E))
+                {
+                    ball.transform.position = new Vector3(25.216f, 1.566f,42.681f);
+                    ballRB.velocity = Vector3.zero;
+                    ballRB.angularVelocity = Vector3.zero;
+                }
+            }
+            else if(pickableBtn == true){
+                    pickableBtn = false;
+                    canvasScript.changePickableBallColor(false);
+            }
+            if(Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, 2, pickableLayer))
             {
                 if(isPickableBall == false)
                 {
@@ -79,7 +100,7 @@ public class PlayerActions : MonoBehaviour
                 if(isPickableBall && Input.GetKeyDown(KeyCode.E))
                 {                        
                     holdingBall = true;
-                    ballCollider.enabled = false;
+                    // ballCollider.enabled = false;
                     ballRB.useGravity = false;
                     ballRB.velocity = Vector3.zero;
                     ballRB.angularVelocity = Vector3.zero;

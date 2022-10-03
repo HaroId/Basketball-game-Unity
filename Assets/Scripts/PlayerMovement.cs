@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController controller;
     public float speed = 5f;
+    public float runSpeed = 8f;
     float x;
     float z;
     Vector3 move;
@@ -39,11 +40,22 @@ public class PlayerMovement : MonoBehaviour
         x = Input.GetAxis("Horizontal");
         z = Input.GetAxis("Vertical");
         move = transform.right * x + transform.forward * z;
-        controller.Move(move*speed*Time.deltaTime);
+        // controller.Move(move*speed*Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded){
+        if(Input.GetButton("Jump") && isGrounded){
             velocity.y =jumpValue;
         }
+
+        //Si shift se esta presionando aumenta la velocidad
+
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        {
+            controller.Move(move*runSpeed*Time.deltaTime);
+        }
+        else{
+            controller.Move(move*speed*Time.deltaTime);
+        }
+
         
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
